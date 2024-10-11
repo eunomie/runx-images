@@ -1,0 +1,101 @@
+actions:
+  - id: help
+    desc: Print Docker Scout CLI help
+    type: run
+    cmd: >
+      --rm {{if .IsTTY}}-it{{end}}
+      {{.Ref}} help
+
+  - id: self
+    desc: Run quickview against the image itself
+    type: run
+    env:
+      - DOCKER_SCOUT_HUB_USER
+      - DOCKER_SCOUT_HUB_PASSWORD
+    opts:
+      - name: org
+        desc: Your organization (Docker Hub namespace)
+        no-prompt: true
+        required: false
+    cmd: >
+      {{$org := opt "org"}}
+      -e DOCKER_SCOUT_HUB_USER
+      -e DOCKER_SCOUT_HUB_PASSWORD
+      -u root
+      -v /var/run/docker.sock:/var/run/docker.sock
+      --rm {{if .IsTTY}}-it{{end}}
+      {{.Ref}} quickview {{if $org}}--org {{$org}}{{end}} {{.Ref}}
+
+  - id: qv
+    desc: Run docker scout quickview command
+    type: run
+    env:
+      - DOCKER_SCOUT_HUB_USER
+      - DOCKER_SCOUT_HUB_PASSWORD
+    opts:
+      - name: org
+        desc: Your organization (Docker Hub namespace)
+        no-prompt: true
+        required: false
+      - name: ref
+        desc: The image reference
+        prompt: Please enter the image reference
+        required: true
+    cmd: >
+      {{$org := opt "org"}}
+      -e DOCKER_SCOUT_HUB_USER
+      -e DOCKER_SCOUT_HUB_PASSWORD
+      -u root
+      -v /var/run/docker.sock:/var/run/docker.sock
+      --rm {{if .IsTTY}}-it{{end}}
+      {{.Ref}} quickview {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}
+
+  - id: cves
+    desc: Run docker scout cves command
+    type: run
+    env:
+      - DOCKER_SCOUT_HUB_USER
+      - DOCKER_SCOUT_HUB_PASSWORD
+    opts:
+      - name: org
+        desc: Your organization (Docker Hub namespace)
+        no-prompt: true
+        required: false
+      - name: ref
+        desc: The image reference
+        prompt: Please enter the image reference
+        required: true
+    cmd: >
+      {{$org := opt "org"}}
+      -e DOCKER_SCOUT_HUB_USER
+      -e DOCKER_SCOUT_HUB_PASSWORD
+      -u root
+      -v /var/run/docker.sock:/var/run/docker.sock
+      --rm {{if .IsTTY}}-it{{end}}
+      {{.Ref}} cves {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}
+
+  - id: cves:pkgs
+    desc: List vulnerable packages only and ignore the base image
+    type: run
+    env:
+      - DOCKER_SCOUT_HUB_USER
+      - DOCKER_SCOUT_HUB_PASSWORD
+    opts:
+      - name: org
+        desc: Your organization (Docker Hub namespace)
+        no-prompt: true
+        required: false
+      - name: ref
+        desc: The image reference
+        prompt: Please enter the image reference
+        required: true
+    cmd: >
+      {{$org := opt "org"}}
+      -e DOCKER_SCOUT_HUB_USER
+      -e DOCKER_SCOUT_HUB_PASSWORD
+      -u root
+      -v /var/run/docker.sock:/var/run/docker.sock
+      --rm {{if .IsTTY}}-it{{end}}
+      {{.Ref}} cves
+      --format only-packages --only-vuln-packages --ignore-base
+      {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}

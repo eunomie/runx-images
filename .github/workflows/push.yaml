@@ -1,0 +1,42 @@
+name: Push
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  NAMESPACE: eunomie
+
+jobs:
+  changes:
+    name: Check for changes
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.changes.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            golangci-lint:
+              - 'golangci-lint/*'
+            scout-cli:
+              - 'scout-cli/*'
+  decorate:
+    name: Decorate images
+    needs: changes
+    if: ${{ needs.changes.outputs.changes != '[]' }}
+    strategy:
+      matrix:
+        img: ${{ fromJSON(needs.changes.outputs.changes) }}
+    uses: ./.github/workflows/decorate.yaml
+    with:
+      img: ${{ matrix.img }}
+    secrets: inherit

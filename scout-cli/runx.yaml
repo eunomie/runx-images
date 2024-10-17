@@ -17,13 +17,13 @@ actions:
         desc: Your organization (Docker Hub namespace)
         no-prompt: true
         required: false
-    cmd: >
-      {{$org := opt "org"}}
-      -e DOCKER_SCOUT_HUB_USER
-      -e DOCKER_SCOUT_HUB_PASSWORD
-      -u root
-      -v /var/run/docker.sock:/var/run/docker.sock
-      --rm {{if .IsTTY}}-it{{end}}
+    cmd: |
+      {{$org := opt "org"}} \
+      -e DOCKER_SCOUT_HUB_USER \
+      -e DOCKER_SCOUT_HUB_PASSWORD \
+      -u root \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --rm {{if .IsTTY}}-it{{end}} \
       {{.Ref}} quickview {{if $org}}--org {{$org}}{{end}} {{.Ref}}
 
   - id: qv
@@ -40,14 +40,15 @@ actions:
       - name: ref
         desc: The image reference
         prompt: Please enter the image reference
+        type: input
         required: true
-    cmd: >
-      {{$org := opt "org"}}
-      -e DOCKER_SCOUT_HUB_USER
-      -e DOCKER_SCOUT_HUB_PASSWORD
-      -u root
-      -v /var/run/docker.sock:/var/run/docker.sock
-      --rm {{if .IsTTY}}-it{{end}}
+    cmd: |
+      {{$org := opt "org"}} \
+      -e DOCKER_SCOUT_HUB_USER \
+      -e DOCKER_SCOUT_HUB_PASSWORD \
+      -u root \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --rm {{if .IsTTY}}-it{{end}} \
       {{.Ref}} quickview {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}
 
   - id: cves
@@ -64,14 +65,15 @@ actions:
       - name: ref
         desc: The image reference
         prompt: Please enter the image reference
+        type: input
         required: true
-    cmd: >
-      {{$org := opt "org"}}
-      -e DOCKER_SCOUT_HUB_USER
-      -e DOCKER_SCOUT_HUB_PASSWORD
-      -u root
-      -v /var/run/docker.sock:/var/run/docker.sock
-      --rm {{if .IsTTY}}-it{{end}}
+    cmd: |
+      {{$org := opt "org"}} \
+      -e DOCKER_SCOUT_HUB_USER \
+      -e DOCKER_SCOUT_HUB_PASSWORD \
+      -u root \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --rm {{if .IsTTY}}-it{{end}} \
       {{.Ref}} cves {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}
 
   - id: cves:pkgs
@@ -88,14 +90,15 @@ actions:
       - name: ref
         desc: The image reference
         prompt: Please enter the image reference
+        type: input
         required: true
-    cmd: >
-      {{$org := opt "org"}}
-      -e DOCKER_SCOUT_HUB_USER
-      -e DOCKER_SCOUT_HUB_PASSWORD
-      -u root
-      -v /var/run/docker.sock:/var/run/docker.sock
-      --rm {{if .IsTTY}}-it{{end}}
-      {{.Ref}} cves
-      --format only-packages --only-vuln-packages --ignore-base
+    cmd: |
+      {{$org := opt "org"}} \
+      -e DOCKER_SCOUT_HUB_USER \
+      -e DOCKER_SCOUT_HUB_PASSWORD \
+      -u root \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --rm {{if .IsTTY}}-it{{end}} \
+      {{.Ref}} cves \
+      --format only-packages --only-vuln-packages --ignore-base \
       {{if $org}}--org {{$org}}{{end}} {{opt "ref"}}
